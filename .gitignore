@@ -1,0 +1,22 @@
+### Installation artifacts
+node_modules/
+<%= pkg %>/static/vendor/
+*.min.js
+*.min.css
+
+### Log artifacts
+npm-debug.log
+
+### IDE artifacts
+.idea
+
+### OS X artifacts
+*.DS_Store
+.AppleDouble
+:2e_*
+:2e#
+
+### Other artifacts
+*.egg-info
+*.pyc
+*~

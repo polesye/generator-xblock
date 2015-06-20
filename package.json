@@ -1,0 +1,31 @@
+{
+  "name": "generator-xblock",
+  "version": "0.0.0",
+  "description": "Yeoman generator",
+  "license": "MIT",
+  "main": "app/index.js",
+  "repository": "polesye/generator-xblock",
+  "author": {
+    "name": "Anton Stupak",
+    "email": "",
+    "url": "https://github.com/polesye"
+  },
+  "scripts": {
+    "test": "mocha"
+  },
+  "files": [
+    "generators"
+  ],
+  "keywords": [
+    "yeoman-generator"
+  ],
+  "dependencies": {
+    "yeoman-generator": "^0.19.0",
+    "chalk": "^1.0.0",
+    "yosay": "^1.0.2",
+    "underscore.string": "^3.1.1"
+  },
+  "devDependencies": {
+    "mocha": "*"
+  }
+}
