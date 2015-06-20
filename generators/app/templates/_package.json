@@ -1,0 +1,16 @@
+{
+  "name": "<%= xblockName %>",
+  "description": "<%= description %>",
+  "version": "0.0.0",
+  "scripts": {
+    "build": ". ./scripts/build",
+    "watch": ". ./scripts/watch",
+    "deploy": "pip install -r requirements.txt"
+  },
+  "devDependencies": {
+    "stylus": "~0.51.1",
+    "nib": "~1.1.0",
+    "webpack": "~1.9.11"
+  },
+  "keywords": ["<%= xblockName %>"]
+}

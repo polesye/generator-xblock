@@ -1,0 +1,14 @@
+#! /bin/sh
+
+# Fail immediately on errors
+set -e
+
+# Display commands as they execute
+set -x
+
+watch_css() {
+  local stylus=./node_modules/.bin/stylus
+  find ./<%= pkg %>/static -type f -name *.styl | xargs $stylus --watch --use ./node_modules/nib/lib/nib
+}
+
+watch_css & ./node_modules/.bin/webpack --watch

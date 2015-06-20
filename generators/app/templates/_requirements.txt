@@ -1,0 +1,6 @@
+# For Tests
+mock
+nose
+ddt==0.8.0
+
+-e .

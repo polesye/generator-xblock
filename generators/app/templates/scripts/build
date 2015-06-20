@@ -1,0 +1,15 @@
+#! /bin/sh
+
+# Fail immediately on errors
+set -e
+
+# Display commands as they execute
+set -x
+
+compile_css() {
+  local stylus=./node_modules/.bin/stylus
+  find ./<%= pkg %>/static -type f -name *.styl | xargs $stylus --compress --sourcemap --use ./node_modules/nib/lib/nib
+}
+
+compile_css
+./node_modules/.bin/webpack -p
