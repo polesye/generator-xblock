@@ -1,9 +1,4 @@
 'use strict';
-var $ = window.jQuery || window.$;
-<% if (options.gradable) { %>
-var MessageManager = require('./message').MessageManager;
-<% } %>
-
 var <%= className %>View = function(runtime, element) {
   this.element = element;
   this.runtime = runtime;
@@ -12,38 +7,32 @@ var <%= className %>View = function(runtime, element) {
 
 <%= className %>View.prototype = {
   initialize: function() {
-    <% if (options.gradable) { %>
-    this.message = new MessageManager($('.msg-holder', this.element));
-    <% } %>
-    this.bindHandlers();
+    this.plugin = {};
+    this.initializePlugins(<%= className %>View.plugins);
+<% if (options.events) { %>
+    // @TODO: Remove the events.emit below before start using the XBlock on
+    // production. It's added just to show how to emit events.
+    this.plugin.events.emit('xblock.<%= xblockName %>.initialized', {
+      time: new Date()
+    });<%
+} %>
   },
-  bindHandlers: function() {
-    <% if (options.gradable) { %>
-    $(this.element)
-      .on('click.<%= className %>', '.btn-primary', this.submit.bind(this));
-    <% } %>
-  },
-  <% if (options.gradable) { %>
-  submit: function() {
-    var url = this.runtime.handlerUrl(this.element, 'student_submit');
-    $.ajax(url, {
-      type: 'POST',
-      dataType: 'json',
-      data: JSON.stringify({}),
-      success: function(data) {
-        var types = {success: 'success', failure: 'error'};
-        this.message.show(types[data.result], data.msg);
-      }.bind(this),
-      error: function(jqXhr, textStatus, errorThrown) {
-        this.message.show('error', errorThrown);
-      }.bind(this)
-    });
-    return false;
-  },
-  <% } %>
-  unBindHandlers: function() {
-    $(this.element).off('.<%= className %>');
+  initializePlugins: function(plugins) {
+    plugins.forEach(function(pluginInfo) {
+      // Initialize each plugin and attach them to the `this.plugin`.
+      this.plugin[pluginInfo.name] = pluginInfo.factory(
+        this.runtime, this.element
+      );
+    }, this);
   }
 };
+
+<%= className %>View.plugins = [];
+<%= className %>View.addPlugin = function(name, factory) {
+  <%= className %>View.plugins.push({name: name, factory: factory});
+};
+
+<% if (options.events) { %><%= className %>View.addPlugin('events', require('./events').Events.factory);<% } %>
+<% if (options.gradable) { %><%= className %>View.addPlugin('grade', require('./grade').Grade.factory);<% } %>
 
 module.exports.<%= className %>View = window.<%= className %>View = <%= className %>View;

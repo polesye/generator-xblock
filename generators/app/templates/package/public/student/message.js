@@ -3,7 +3,7 @@ var $ = window.jQuery || window.$;
 
 var Message = function(options) {
   this.type = options.type || 'info';
-  this.tagName = options.tagName || 'p';
+  this.tagName = options.tagName || 'div';
   this.message = null;
 };
 
@@ -42,7 +42,6 @@ MessageManager.prototype = {
       this.message = message;
     }
   },
-
   hide: function() {
     if (this.message) {
       this.message.destroy();
@@ -52,6 +51,7 @@ MessageManager.prototype = {
 
 MessageManager.TYPES = {
   'success': Message.factory({type: 'success'}),
+  'failure': Message.factory({type: 'failure'}),
   'error': Message.factory({type: 'error'}),
   'info': Message.factory({type: 'info'})
 };

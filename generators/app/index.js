@@ -135,8 +135,10 @@ module.exports = yeoman.generators.Base.extend({
             ['studio', 'studio_edit.styl'],
           ];
 
-
-      if (this.props.options.gradable) files.push(['student', 'message.js']);
+      if (this.props.options.events) files.push(['student', 'events.js']);
+      if (this.props.options.gradable) {
+        files.push(['student', 'grade.js'], ['student', 'message.js']);
+      }
 
       files.forEach(function(o) {
         this._copyTpl(
