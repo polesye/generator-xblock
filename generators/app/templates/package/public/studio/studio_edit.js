@@ -9,7 +9,7 @@ var <%= className %>Edit = function(runtime, element) {
 
 <%= className %>Edit.prototype = {
   initialize: function() {
-    this.url = this.runtime.handlerUrl(this.element, 'studio_view_save');
+    this.url = this.runtime.handlerUrl(this.element, 'studio_submit');
     this.bindHandlers();
   },
   bindHandlers: function() {
@@ -26,7 +26,7 @@ var <%= className %>Edit = function(runtime, element) {
       type: 'POST',
       data: JSON.stringify({
         // @TODO: Add entries here for each field to be saved
-        'name': $('#xblock-<%= viewClassName %>-name').val(),
+        'display_name': $('#xblock-<%= viewClassName %>-name').val(),
       }),
       success: this.onSuccess.bind(this),
       error: this.onError.bind(this)
