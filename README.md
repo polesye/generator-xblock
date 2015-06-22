@@ -25,6 +25,8 @@ npm link
 Finally, initiate the generator:
 
 ```bash
+mkdir ~/my_first_xblock
+cd ~/my_first_xblock
 yo xblock
 ```
 
