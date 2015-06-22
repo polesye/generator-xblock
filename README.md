@@ -1,6 +1,4 @@
-# generator-xblock [![Build Status](https://secure.travis-ci.org/polesye/generator-xblock.png?branch=master)](https://travis-ci.org/polesye/generator-xblock)
-
-> [Yeoman](http://yeoman.io) generator
+# generator-xblock [![Build Status](https://secure.travis-ci.org/polesye/generator-xblock.png?branch=v1)](https://travis-ci.org/polesye/generator-xblock)
 
 
 ## Getting Started
@@ -18,7 +16,10 @@ npm install -g yo
 To install generator-xblock from npm, run:
 
 ```bash
-npm install -g https://github.com/polesye/generator-xblock/archive/v1.zip
+git clone -g https://github.com/polesye/generator-xblock.git
+cd generator-xblock
+git checkout v1
+npm link
 ```
 
 Finally, initiate the generator:
