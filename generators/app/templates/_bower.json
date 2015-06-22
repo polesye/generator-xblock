@@ -1,9 +1,5 @@
 {
   "name": "<%= xblockName %>",
-  "version": "0.0.0",
-  "dependencies": {
-  	"jquery": "*"
-  },
-  "devDependencies": {},
-  "resolutions": {}
+  "version": "0.1.0",
+  "dependencies": {}
 }

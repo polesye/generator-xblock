@@ -1,10 +1,17 @@
+"""
+Events mixin for the XBlock.
+"""
 from xblock.core import XBlock
+
 
 class EventsMixin(object):
     """
     Adds events support.
     """
     def _get_unique_id(self):
+        """
+        Generates an unique id for the XBlock.
+        """
         try:
             unique_id = self.location.name
         except AttributeError:
@@ -14,6 +21,9 @@ class EventsMixin(object):
 
     @XBlock.json_handler
     def publish_event(self, data, suffix=''):
+        """
+        Event handler for the XBlock.
+        """
         try:
             event_type = data.pop('event_type')
         except KeyError as e:

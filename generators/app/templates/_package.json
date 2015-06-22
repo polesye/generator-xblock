@@ -1,16 +1,17 @@
 {
   "name": "<%= xblockName %>",
   "description": "<%= description %>",
-  "version": "0.0.0",
+  "version": "0.1.0",
   "scripts": {
-    "build": ". ./scripts/build",
-    "watch": ". ./scripts/watch",
-    "deploy": "pip install -r requirements.txt"
+    "build": "sh ./scripts/build",
+    "watch": "sh ./scripts/watch",
+    "postinstall": "./node_modules/.bin/bower install && npm run build"
   },
   "devDependencies": {
     "stylus": "~0.51.1",
     "nib": "~1.1.0",
-    "webpack": "~1.9.11"
+    "webpack": "~1.9.11",
+    "bower": "*"
   },
   "keywords": ["<%= xblockName %>"]
 }

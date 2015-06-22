@@ -8,7 +8,8 @@ set -x
 
 watch_css() {
   local stylus=./node_modules/.bin/stylus
-  find ./<%= pkg %>/static -type f -name *.styl | xargs $stylus --watch --use ./node_modules/nib/lib/nib
+  find ./<%= pkg %>/<%= STATIC_DIR_NAME %> -type f -name *.styl | \
+  xargs $stylus --watch --use ./node_modules/nib/lib/nib
 }
 
 watch_css & ./node_modules/.bin/webpack --watch

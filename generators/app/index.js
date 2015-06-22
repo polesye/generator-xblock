@@ -10,7 +10,7 @@ module.exports = yeoman.generators.Base.extend({
     var done = this.async();
 
     this.log(yosay(
-      'Welcome to the wicked ' + chalk.red('Xblock') + ' generator!'
+      'Welcome to the ' + chalk.red('Xblock') + ' generator!'
     ));
 
     var prompts = [{
@@ -23,17 +23,16 @@ module.exports = yeoman.generators.Base.extend({
       type: 'input',
       name: 'description',
       message: 'XBlock description:',
-      default: 'It\'s a basic XBlock.'
+      default: 'It is a basic XBlock.'
     },
     {
       type: 'checkbox',
       name: 'options',
       choices: [
-        {name: 'None'},
         {name: 'Gradable'},
         {name: 'Events'}
       ],
-      message: 'What do you want to use?',
+      message: 'Features:',
       filter: function(choices) {
         return choices.map(function(value) {
           return value.toLowerCase();
@@ -63,6 +62,7 @@ module.exports = yeoman.generators.Base.extend({
         this.props.options[value] = true;
       }, this);
       this.props._ = s;
+      this.props.STATIC_DIR_NAME = 'public';
       done();
     }.bind(this));
   },
@@ -121,19 +121,24 @@ module.exports = yeoman.generators.Base.extend({
       }, this);
     },
 
-    statcifiles: function() {
-      var SRC_STATIC_ROOT = path.join('package', 'static'),
-          DEST_STATIC_ROOT = path.join(this.props.pkg, 'static');
-      [
-        ['student', 'student_view.html'],
-        ['student', 'message.js'],
-        ['student', 'student_view.js'],
-        ['student', 'student_view.styl'],
+    staticfiles: function() {
+      var props = this.props,
+          SRC_STATIC_ROOT = path.join('package', props.STATIC_DIR_NAME),
+          DEST_STATIC_ROOT = path.join(props.pkg, props.STATIC_DIR_NAME),
+          files = [
+            ['student', 'student_view.html'],
+            ['student', 'student_view.js'],
+            ['student', 'student_view.styl'],
 
-        ['studio', 'studio_edit.html'],
-        ['studio', 'studio_edit.js'],
-        ['studio', 'studio_edit.styl'],
-      ].forEach(function(o) {
+            ['studio', 'studio_edit.html'],
+            ['studio', 'studio_edit.js'],
+            ['studio', 'studio_edit.styl'],
+          ];
+
+
+      if (this.props.options.gradable) files.push(['student', 'message.js']);
+
+      files.forEach(function(o) {
         this._copyTpl(
           path.join.apply(path, [SRC_STATIC_ROOT].concat(o)),
           path.join.apply(path, [DEST_STATIC_ROOT].concat(o))
@@ -143,6 +148,6 @@ module.exports = yeoman.generators.Base.extend({
   },
 
   install: function() {
-    this.installDependencies();
+    this.npmInstall();
   }
 });

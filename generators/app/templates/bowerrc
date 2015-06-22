@@ -1,3 +1,3 @@
 {
-  "directory" : "<%= pkg %>/static/vendor/"
+  "directory": "<%= pkg %>/<%= STATIC_DIR_NAME %>/vendor/"
 }

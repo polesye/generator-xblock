@@ -1,11 +1,15 @@
+"""
+Gradding mixin for the XBlock.
+"""
 from xblock.core import XBlock
+from xblock.fields import Scope, Float
 
 
 class GradeMixin(object):
-    "Provides grade support."
+    "Adds grading support."
     weight = Float(
         display_name="Weight",
-        help="This is the maximum score that the user receives when he/she successfully completes the problem",
+        help="The maximum score that the user receives when the problem is successfully completed.",
         scope=Scope.settings,
         default=<%= weight %>
     )
@@ -13,9 +17,12 @@ class GradeMixin(object):
 
     @XBlock.json_handler
     def student_submit(self, data, suffix=''):
+        """
+        Grading handler for the XBlock.
+        """
         is_correct = True
         # TODO: Add your logic here.
-        
+
         # publish a grading event when student completes
         try:
             self.runtime.publish(self, 'grade', {
@@ -27,7 +34,6 @@ class GradeMixin(object):
             # we have to figure that we're running in Studio for now
             pass
         if is_correct:
-            return {'result': 'success', 'msg': 'Congutilations!'}
+            return {'result': 'success', 'msg': 'Congratulations!'}
         else:
-            return {'result': 'failure', 'msg': 'Sorry, but you answer is wrong.'}
-        return {'result':'success'}
+            return {'result': 'failure', 'msg': 'Sorry, but your answer is wrong.'}

@@ -1,10 +1,13 @@
 """Setup for <%= xblockName %>."""
-
 import os
+import subprocess
 import setuptools
+from setuptools.command.install import install
+
 
 def package_data(pkg, roots):
-    """Generic function to find package_data.
+    """
+    Generic function to find package_data.
     All of the files under each of the `roots` will be declared as package
     data for package `pkg`.
     """
@@ -16,11 +19,19 @@ def package_data(pkg, roots):
 
     return {pkg: data}
 
+
+class BundleInstallCommand(install):
+    """Bundle assets before installation"""
+    def run(self):
+        subprocess.call(['npm', 'install'])
+        install.run(self)
+
+
 setuptools.setup(
     name='xblock-<%= xblockName %>',
     version='0.1.0',
     description='<%= description %>',
-    license='AGPL-3.0',
+    license='MIT',
     packages=['<%= pkg %>'],
     install_requires=[
         'XBlock',
@@ -31,20 +42,8 @@ setuptools.setup(
         ],
     },
     package_dir={
-        '<%= pkg %>': '<%= className %>',
+        '<%= pkg %>': '<%= pkg %>',
     },
-    package_data={
-        "<%= pkg %>": package_data('<%= pkg %>', ['static']),
-    },
-    classifiers=[
-        # https://pypi.python.org/pypi?%3Aaction=list_classifiers
-        'Intended Audience :: Developers',
-        'Intended Audience :: Education',
-        'License :: OSI Approved :: GNU Affero General Public License v3',
-        'Operating System :: OS Independent',
-        'Programming Language :: JavaScript',
-        'Programming Language :: Python',
-        'Topic :: Education',
-        'Topic :: Internet :: WWW/HTTP',
-    ],
+    package_data=package_data('<%= pkg %>', ['<%= STATIC_DIR_NAME %>']),
+    cmdclass={'install': BundleInstallCommand}
 )

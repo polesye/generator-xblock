@@ -1,25 +1,24 @@
 'use strict';
-var $ = require('../vendor/jquery/dist/jquery.min');
+var $ = window.jQuery || window.$;
 
 var <%= className %>Edit = function(runtime, element) {
   this.element = element;
   this.runtime = runtime;
+  this.initialize();
 };
 
 <%= className %>Edit.prototype = {
   initialize: function() {
-    this.buttonSave = $('.save-button', this.element);
-    this.buttonCancel = $('.cancel-button', this.element);
     this.url = this.runtime.handlerUrl(this.element, 'studio_view_save');
     this.bindHandlers();
   },
   bindHandlers: function() {
-    this.buttonSave.on('click.<%= className %>', this.cancel.save(this));
-    this.buttonCancel.on('click.<%= className %>', this.cancel.bind(this));
+    $(this.element)
+      .on('click.<%= className %>', '.save-button', this.save.bind(this))
+      .on('click.<%= className %>', '.cancel-button', this.cancel.bind(this));
   },
   unBindHandlers: function() {
-    this.buttonSave.off('.<%= className %>');
-    this.buttonCancel.off('.<%= className %>');
+    $(this.element).off('.<%= className %>');
   },
   save: function() {
     this.runtime.notify('save', {state: 'start'});
