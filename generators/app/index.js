@@ -1,4 +1,5 @@
 'use strict';
+var util = require('util');
 var path = require('path');
 var yeoman = require('yeoman-generator');
 var chalk = require('chalk');
@@ -73,79 +74,78 @@ module.exports = yeoman.generators.Base.extend({
     );
   },
 
+  _bulkCopyTpl: function(items, src, dst) {
+    items.forEach(function(item) {
+      var from, to;
+      if (util.isFunction(item.when) && !item.when()) return false;
+      if (util.isObject(item)) {
+        from = item.name;
+        to = item.renameTo || item.name;
+      } else {
+        from = to = item;
+      }
+      this._copyTpl(
+        path.join.apply(path, [src || '', from]),
+        path.join.apply(path, [dst || '', to])
+      );
+    }, this);
+  },
+
   _copy: function(src, dst) {
     this.fs.copy(this.templatePath(src), this.destinationPath(dst));
   },
 
   writing: {
     app: function() {
-      this._copyTpl('_requirements.txt', 'requirements.txt');
-      this._copyTpl('_package.json', 'package.json');
-      this._copyTpl('_bower.json', 'bower.json');
-      this._copyTpl('_webpack.config.js', 'webpack.config.js');
+      this._bulkCopyTpl([
+        {name: '_requirements.txt', renameTo: 'requirements.txt'},
+        {name: '_package.json', renameTo: 'package.json'},
+        {name: '_bower.json', renameTo: 'bower.json'},
+        {name: '_webpack.config.js', renameTo: 'webpack.config.js'}
+      ]);
     },
 
     projectfiles: function() {
       this._copy('editorconfig', '.editorconfig');
       this._copy('jshintrc', '.jshintrc');
       this._copy('travis.yml', '.travis.yml');
-      this._copyTpl('bowerrc', '.bowerrc');
-      this._copyTpl('README.md', 'README.md');
-      this._copyTpl(
-        path.join('scripts', 'watch'), path.join('scripts', 'watch')
-      );
-      this._copyTpl(
-        path.join('scripts', 'build'), path.join('scripts', 'build')
-      );
+      this._bulkCopyTpl(['README.md', {name: 'bowerrc', renameTo: '.bowerrc'}]);
+    },
+
+    scriptfiles: function() {
+      this._bulkCopyTpl(['watch', 'build'], 'scripts', 'scripts');
     },
 
     package: function() {
-      var SRC_STATIC_ROOT = 'package',
-          DEST_STATIC_ROOT = this.props.pkg,
-          files = ['__init__.py', 'handlers.py', 'view.py', 'utils.py'];
+      var options = this.props.options;
 
       this._copyTpl('_setup.py', 'setup.py');
-      this._copyTpl(
-        path.join(SRC_STATIC_ROOT, 'package.py'),
-        path.join(DEST_STATIC_ROOT, this.props.pkg + '.py')
-      );
-
-      if (this.props.options.events) files.push('events.py');
-      if (this.props.options.gradable) files.push('grade.py');
-
-      files.forEach(function(o) {
-        this._copyTpl(
-          path.join.apply(path, [SRC_STATIC_ROOT, o]),
-          path.join.apply(path, [DEST_STATIC_ROOT, o])
-        );
-      }, this);
+      this._bulkCopyTpl([
+        '__init__.py', 'handlers.py', 'view.py', 'utils.py',
+        {name: 'package.py', renameTo: this.props.pkg + '.py'},
+        {name: 'events.py', when: function() { return options.events; }},
+        {name: 'grade.py', when: function() { return options.gradable; }}
+      ], 'package', this.props.pkg);
     },
 
     staticfiles: function() {
       var props = this.props,
-          SRC_STATIC_ROOT = path.join('package', props.STATIC_DIR_NAME),
-          DEST_STATIC_ROOT = path.join(props.pkg, props.STATIC_DIR_NAME),
-          files = [
-            ['student', 'student_view.html'],
-            ['student', 'student_view.js'],
-            ['student', 'student_view.styl'],
+          STUDENT_SRC = path.join('package', props.STATIC_DIR_NAME, 'student'),
+          STUDENT_DST = path.join(props.pkg, props.STATIC_DIR_NAME, 'student'),
+          STUDIO_SRC = path.join('package', props.STATIC_DIR_NAME, 'studio'),
+          STUDIO_DST = path.join(props.pkg, props.STATIC_DIR_NAME, 'studio'),
+          options = this.props.options;
 
-            ['studio', 'studio_edit.html'],
-            ['studio', 'studio_edit.js'],
-            ['studio', 'studio_edit.styl'],
-          ];
+      this._bulkCopyTpl([
+        'student_view.html', 'student_view.js', 'student_view.styl',
+        {name: 'events.js', when: function() { return options.events; }},
+        {name: 'grade.js', when: function() { return options.gradable; }},
+        {name: 'message.js', when: function() { return options.gradable; }}
+      ], STUDENT_SRC, STUDENT_DST);
 
-      if (this.props.options.events) files.push(['student', 'events.js']);
-      if (this.props.options.gradable) {
-        files.push(['student', 'grade.js'], ['student', 'message.js']);
-      }
-
-      files.forEach(function(o) {
-        this._copyTpl(
-          path.join.apply(path, [SRC_STATIC_ROOT].concat(o)),
-          path.join.apply(path, [DEST_STATIC_ROOT].concat(o))
-        );
-      }, this);
+      this._bulkCopyTpl([
+        'studio_edit.html', 'studio_edit.js', 'studio_edit.styl'
+      ], STUDIO_SRC, STUDIO_DST);
     }
   },
 
