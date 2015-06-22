@@ -28,4 +28,4 @@ Events.factory = function(runtime, element) {
   return new Events(url);
 };
 
-module.exports.Events = Events;
+module.exports.Events = Events.factory;

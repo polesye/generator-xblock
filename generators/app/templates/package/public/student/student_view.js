@@ -32,7 +32,7 @@ var <%= className %>View = function(runtime, element) {
   <%= className %>View.plugins.push({name: name, factory: factory});
 };
 
-<% if (options.events) { %><%= className %>View.addPlugin('events', require('./events').Events.factory);<% } %>
-<% if (options.gradable) { %><%= className %>View.addPlugin('grade', require('./grade').Grade.factory);<% } %>
+<% if (options.events) { %><%= className %>View.addPlugin('events', require('./events'));<% } %>
+<% if (options.gradable) { %><%= className %>View.addPlugin('grade', require('./grade'));<% } %>
 
 module.exports.<%= className %>View = window.<%= className %>View = <%= className %>View;

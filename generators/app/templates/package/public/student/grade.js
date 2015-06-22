@@ -55,4 +55,4 @@ Grade.factory = function(runtime, element) {
   });
 };
 
-module.exports.Grade = Grade;
+module.exports.Grade = Grade.factory;
