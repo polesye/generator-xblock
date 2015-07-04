@@ -20,14 +20,18 @@ var <%= className %>Edit = function(runtime, element) {
   unBindHandlers: function() {
     $(this.element).off('.<%= className %>');
   },
+  getData: function() {
+    var data = {};
+    $('.setting-input', this.element).each(function(val) {
+      data[this.name] = this.value;
+    });
+    return data;
+  },
   save: function() {
     this.runtime.notify('save', {state: 'start'});
     $.ajax(this.url, {
       type: 'POST',
-      data: JSON.stringify({
-        // @TODO: Add entries here for each field to be saved
-        'display_name': $('#xblock-<%= viewClassName %>-name').val(),
-      }),
+      data: JSON.stringify(this.getData()),
       success: this.onSuccess.bind(this),
       error: this.onError.bind(this)
     });

@@ -11,9 +11,9 @@ class GradeMixin(object):
         display_name="Weight",
         help="The maximum score that the user receives when the problem is successfully completed.",
         scope=Scope.settings,
-        default=<%= weight %>
+        default=<%= weight %>,
+        values={'step': 0.1, 'min': 0},
     )
-    has_score = True
 
     @XBlock.json_handler
     def student_submit(self, data, suffix=''):
@@ -26,8 +26,8 @@ class GradeMixin(object):
         # publish a grading event when student completes
         try:
             self.runtime.publish(self, 'grade', {
-                'value': self.weight,
-                'max_value': self.weight,
+                'value': self.get_score(),
+                'max_value': self.max_score(),
             })
         except NotImplementedError:
             # Note, this publish method is unimplemented in Studio runtimes, so

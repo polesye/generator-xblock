@@ -24,7 +24,15 @@ class <%= className %>(XBlock, <%= mixins.join(', ') %>):
         scope=Scope.settings,
         default="<%= className %>"
     )
+    <% if (options.gradable) {%>
+    has_score = True
 
+    def get_score(self):
+        return self.weight
+
+    def max_score(self):
+        return self.weight
+    <% } %>
     @staticmethod
     def workbench_scenarios():
         """

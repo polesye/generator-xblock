@@ -121,7 +121,7 @@ module.exports = yeoman.generators.Base.extend({
 
       this._copyTpl('_setup.py', 'setup.py');
       this._bulkCopyTpl([
-        '__init__.py', 'handlers.py', 'view.py', 'utils.py',
+        '__init__.py', 'handlers.py', 'view.py', 'utils.py', 'fields.py',
         {name: 'package.py', renameTo: this.props.pkg + '.py'},
         {name: 'events.py', when: function() { return options.events; }},
         {name: 'grade.py', when: function() { return options.gradable; }}

@@ -1,37 +1,51 @@
+{% macro Field(info) -%}
+  {% if info.type in ("Float", "Integer") %}
+    {{ Number(info) }}
+  {%else%}
+    {{ Generic(info) }}
+  {%endif%}
+{%- endmacro %}
+
+{% macro Generic(info) -%}
+  <div class="wrapper-comp-setting">
+    <label class="label setting-label" for="xblock-<%= viewClassName %>-{{info.field_name}}">
+      {{info.display_name}}
+    </label>
+    <input name="{{info.field_name}}" class="input setting-input" id="xblock-<%= viewClassName %>-{{info.field_name}}"
+      value="{{info.value}}" type="text">
+  </div>
+  <span class="tip setting-help">{{info.help}}</span>
+{%- endmacro %}
+
+{% macro Number(info) -%}
+  <div class="wrapper-comp-setting">
+    <label class="label setting-label" for="xblock-<%= viewClassName %>-{{info.field_name}}">
+      {{info.display_name}}
+    </label>
+    <input name="{{info.field_name}}" class="input setting-input" id="xblock-<%= viewClassName %>-{{info.field_name}}"
+      value="{{ info.value }}" type="number"
+      {{ 'min="%s"' % info.options.min if 'min' in info.options }}
+      {{ 'max="%s"' % info.options.max if 'max' in info.options }}
+      {{ 'step="%s"' % info.options.step if 'step' in info.options }}>
+  </div>
+  <span class="tip setting-help">{{info.help}}</span>
+{%- endmacro %}
+
 <div class="wrapper-comp-settings is-active editor-with-buttons <%= viewClassName %>-edit" id="settings-tab">
   <ul class="list-input settings-list">
-      <!-- @TODO: Add an entry here for each field -->
-      <li class="field comp-setting-entry is-set">
-          <div class="wrapper-comp-setting">
-              <label
-                  class="label setting-label"
-                  for="xblock-<%= viewClassName %>-name"
-              >
-                  Display name
-            </label>
-            <input
-                class="input setting-input"
-                id="xblock-<%= viewClassName %>-name"
-                value="{self.display_name}"
-                type="text"
-                tabindex="1"
-            >
-          </div>
-          <span
-              class="tip setting-help"
-          >
-              This name appears in the horizontal navigation at the top
-              of the page.
-          </span>
-      </li>
+    {% for info in metadata.values() %}
+    <li class="field comp-setting-entry is-set">
+      {{ Field(info) }}
+    </li>
+    {% endfor %}
   </ul>
   <div class="xblock-actions">
     <ul>
       <li class="action-item">
-        <a href="#" tabindex="2" class="button action-primary save-button">Save</a>
+        <a href="#" class="button action-primary save-button">Save</a>
       </li>
       <li class="action-item">
-        <a href="" tabindex="3" class="button cancel-button">Cancel</a>
+        <a href="#" class="button cancel-button">Cancel</a>
       </li>
     </ul>
   </div>
